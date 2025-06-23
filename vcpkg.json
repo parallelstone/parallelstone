@@ -1,0 +1,17 @@
+{
+  "name": "parellelstone",
+  "version": "1.0.0",
+  "description": "C++20 Minecraft Server using Boost.Asio",
+  "dependencies": [
+    "boost-system",
+    "boost-asio",
+    "boost-thread"
+  ],
+  "builtin-baseline": "a42af01b72c28a8e1d7b48107b33e4f286a55ef6",
+  "overrides": [
+    {
+      "name": "boost-build",
+      "version": "1.83.0"
+    }
+  ]
+}
