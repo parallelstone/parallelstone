@@ -4,6 +4,7 @@ bin/
 lib/
 *.exe
 *.out
+.vs/
 
 # CMake
 CMakeCache.txt
@@ -78,3 +79,7 @@ config/*.json
 logs/
 data/
 vcpkg_installed/
+
+# Secret files
+*.env
+*.secret

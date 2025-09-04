@@ -1,0 +1,27 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cmake:*)",
+      "Bash(.ParellelStone_tests.exe)",
+      "Bash(.binReleaseParellelStone_tests.exe)",
+      "Bash(./bin/Release/ParellelStone_tests.exe)",
+      "Bash(\"build\\bin\\Debug\\Parallelstone_tests.exe\")",
+      "Bash(.buildbinDebugParallelstone_tests.exe)",
+      "Bash(powershell:*)",
+      "WebFetch(domain:minecraft.wiki)",
+      "Bash(pwsh:*)",
+      "Bash(\"C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\" -Command \"& ''C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\Common7\\Tools\\Launch-VsDevShell.ps1'' -VsInstallPath ''C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\'' -SkipAutomaticLocation; Write-Host ''VCPKG_ROOT environment:''; Write-Host $env:VCPKG_ROOT; Write-Host ''CMake version:''; cmake --version\")",
+      "Bash(cmd:*)",
+      "Bash(\"C:/Program Files/Microsoft Visual Studio/2022/Community/VC/vcpkg/vcpkg.exe\" install spdlog:x64-windows)",
+      "Bash(\"C:/Program Files/Microsoft Visual Studio/2022/Community/VC/vcpkg/vcpkg.exe\" install)",
+      "Bash(dir \"C:\\Users\\sdsde\\source\\repos\\parallelstone\\vcpkg_installed\\x64-windows\\share\" /b)",
+      "WebFetch(domain:minecraft-ids.grahamedgecombe.com)",
+      "WebSearch",
+      "Bash(\"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\vcpkg\\vcpkg.exe\" install)"
+    ],
+    "deny": [],
+    "additionalDirectories": [
+      "C:\\Users\\sdsde\\source\\repos"
+    ]
+  }
+}

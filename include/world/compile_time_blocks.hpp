@@ -1,0 +1,1443 @@
+#pragma once
+
+#include <cstdint>
+#include <string_view>
+
+namespace parallelstone {
+namespace world {
+
+/**
+ * @brief Compile-time Minecraft version selection
+ * 
+ * Define MINECRAFT_VERSION at compile time to select which version to support:
+ * -DMINECRAFT_VERSION=120100 for 1.20.1
+ * -DMINECRAFT_VERSION=120400 for 1.20.4
+ * -DMINECRAFT_VERSION=121100 for 1.21.1
+ * -DMINECRAFT_VERSION=121700 for 1.21.7 (default)
+ */
+#ifndef MINECRAFT_VERSION
+#define MINECRAFT_VERSION 121700  // Default to 1.21.7
+#endif
+
+namespace MinecraftVersion {
+    constexpr int MC_1_20_1 = 120100;
+    constexpr int MC_1_20_4 = 120400;
+    constexpr int MC_1_21_1 = 121100;
+    constexpr int MC_1_21_3 = 121300;
+    constexpr int MC_1_21_7 = 121700;
+    
+    constexpr int CURRENT = MINECRAFT_VERSION;
+}
+
+/**
+ * @brief Compile-time version checking
+ */
+constexpr bool supports_version(int version) {
+    return MinecraftVersion::CURRENT >= version;
+}
+
+/**
+ * @brief Complete block type enumeration for Minecraft 1.21.7
+ * Based on official Minecraft block registry
+ */
+enum class BlockType : std::uint16_t {
+    // Air
+    AIR = 0,
+    
+    // Stone variants
+    STONE = 1,
+    GRANITE = 2,
+    POLISHED_GRANITE = 3,
+    DIORITE = 4,
+    POLISHED_DIORITE = 5,
+    ANDESITE = 6,
+    POLISHED_ANDESITE = 7,
+    
+    // Deepslate family (1.17+)
+    DEEPSLATE = 8,
+    COBBLED_DEEPSLATE = 9,
+    POLISHED_DEEPSLATE = 10,
+    DEEPSLATE_BRICKS = 11,
+    CRACKED_DEEPSLATE_BRICKS = 12,
+    DEEPSLATE_TILES = 13,
+    CRACKED_DEEPSLATE_TILES = 14,
+    CHISELED_DEEPSLATE = 15,
+    
+    // Natural blocks
+    GRASS_BLOCK = 16,
+    DIRT = 17,
+    COARSE_DIRT = 18,
+    PODZOL = 19,
+    ROOTED_DIRT = 20,
+    MUD = 21,
+    CRIMSON_NYLIUM = 22,
+    WARPED_NYLIUM = 23,
+    
+    // Cobblestone
+    COBBLESTONE = 24,
+    MOSSY_COBBLESTONE = 25,
+    
+    // Wood planks
+    OAK_PLANKS = 26,
+    SPRUCE_PLANKS = 27,
+    BIRCH_PLANKS = 28,
+    JUNGLE_PLANKS = 29,
+    ACACIA_PLANKS = 30,
+    DARK_OAK_PLANKS = 31,
+    MANGROVE_PLANKS = 32,
+    CHERRY_PLANKS = 33,
+    BAMBOO_PLANKS = 34,
+    CRIMSON_PLANKS = 35,
+    WARPED_PLANKS = 36,
+    
+    // Saplings
+    OAK_SAPLING = 37,
+    SPRUCE_SAPLING = 38,
+    BIRCH_SAPLING = 39,
+    JUNGLE_SAPLING = 40,
+    ACACIA_SAPLING = 41,
+    DARK_OAK_SAPLING = 42,
+    MANGROVE_PROPAGULE = 43,
+    CHERRY_SAPLING = 44,
+    
+    // Bedrock
+    BEDROCK = 45,
+    
+    // Water and Lava
+    WATER = 46,
+    LAVA = 47,
+    
+    // Sand family
+    SAND = 48,
+    SUSPICIOUS_SAND = 49,
+    RED_SAND = 50,
+    
+    // Gravel
+    GRAVEL = 51,
+    SUSPICIOUS_GRAVEL = 52,
+    
+    // Ores - Overworld
+    COAL_ORE = 53,
+    DEEPSLATE_COAL_ORE = 54,
+    IRON_ORE = 55,
+    DEEPSLATE_IRON_ORE = 56,
+    COPPER_ORE = 57,
+    DEEPSLATE_COPPER_ORE = 58,
+    GOLD_ORE = 59,
+    DEEPSLATE_GOLD_ORE = 60,
+    REDSTONE_ORE = 61,
+    DEEPSLATE_REDSTONE_ORE = 62,
+    EMERALD_ORE = 63,
+    DEEPSLATE_EMERALD_ORE = 64,
+    LAPIS_ORE = 65,
+    DEEPSLATE_LAPIS_ORE = 66,
+    DIAMOND_ORE = 67,
+    DEEPSLATE_DIAMOND_ORE = 68,
+    
+    // Nether ores
+    NETHER_GOLD_ORE = 69,
+    NETHER_QUARTZ_ORE = 70,
+    ANCIENT_DEBRIS = 71,
+    
+    // Logs
+    OAK_LOG = 72,
+    SPRUCE_LOG = 73,
+    BIRCH_LOG = 74,
+    JUNGLE_LOG = 75,
+    ACACIA_LOG = 76,
+    DARK_OAK_LOG = 77,
+    MANGROVE_LOG = 78,
+    CHERRY_LOG = 79,
+    CRIMSON_STEM = 80,
+    WARPED_STEM = 81,
+    
+    // Stripped logs
+    STRIPPED_OAK_LOG = 82,
+    STRIPPED_SPRUCE_LOG = 83,
+    STRIPPED_BIRCH_LOG = 84,
+    STRIPPED_JUNGLE_LOG = 85,
+    STRIPPED_ACACIA_LOG = 86,
+    STRIPPED_DARK_OAK_LOG = 87,
+    STRIPPED_MANGROVE_LOG = 88,
+    STRIPPED_CHERRY_LOG = 89,
+    STRIPPED_CRIMSON_STEM = 90,
+    STRIPPED_WARPED_STEM = 91,
+    
+    // Wood blocks
+    OAK_WOOD = 92,
+    SPRUCE_WOOD = 93,
+    BIRCH_WOOD = 94,
+    JUNGLE_WOOD = 95,
+    ACACIA_WOOD = 96,
+    DARK_OAK_WOOD = 97,
+    MANGROVE_WOOD = 98,
+    CHERRY_WOOD = 99,
+    CRIMSON_HYPHAE = 100,
+    WARPED_HYPHAE = 101,
+    
+    // Stripped wood blocks
+    STRIPPED_OAK_WOOD = 102,
+    STRIPPED_SPRUCE_WOOD = 103,
+    STRIPPED_BIRCH_WOOD = 104,
+    STRIPPED_JUNGLE_WOOD = 105,
+    STRIPPED_ACACIA_WOOD = 106,
+    STRIPPED_DARK_OAK_WOOD = 107,
+    STRIPPED_MANGROVE_WOOD = 108,
+    STRIPPED_CHERRY_WOOD = 109,
+    STRIPPED_CRIMSON_HYPHAE = 110,
+    STRIPPED_WARPED_HYPHAE = 111,
+    
+    // Leaves
+    OAK_LEAVES = 112,
+    SPRUCE_LEAVES = 113,
+    BIRCH_LEAVES = 114,
+    JUNGLE_LEAVES = 115,
+    ACACIA_LEAVES = 116,
+    DARK_OAK_LEAVES = 117,
+    MANGROVE_LEAVES = 118,
+    CHERRY_LEAVES = 119,
+    AZALEA_LEAVES = 120,
+    FLOWERING_AZALEA_LEAVES = 121,
+    
+    // Sponge
+    SPONGE = 122,
+    WET_SPONGE = 123,
+    
+    // Glass
+    GLASS = 124,
+    TINTED_GLASS = 125,
+    
+    // Lapis Lazuli
+    LAPIS_BLOCK = 126,
+    
+    // Dispensers and droppers
+    DISPENSER = 127,
+    DROPPER = 128,
+    
+    // Sandstone family
+    SANDSTONE = 129,
+    CHISELED_SANDSTONE = 130,
+    CUT_SANDSTONE = 131,
+    SMOOTH_SANDSTONE = 132,
+    
+    // Red sandstone family
+    RED_SANDSTONE = 133,
+    CHISELED_RED_SANDSTONE = 134,
+    CUT_RED_SANDSTONE = 135,
+    SMOOTH_RED_SANDSTONE = 136,
+    
+    // Note block
+    NOTE_BLOCK = 137,
+    
+    // Beds
+    WHITE_BED = 138,
+    ORANGE_BED = 139,
+    MAGENTA_BED = 140,
+    LIGHT_BLUE_BED = 141,
+    YELLOW_BED = 142,
+    LIME_BED = 143,
+    PINK_BED = 144,
+    GRAY_BED = 145,
+    LIGHT_GRAY_BED = 146,
+    CYAN_BED = 147,
+    PURPLE_BED = 148,
+    BLUE_BED = 149,
+    BROWN_BED = 150,
+    GREEN_BED = 151,
+    RED_BED = 152,
+    BLACK_BED = 153,
+    
+    // Redstone components
+    POWERED_RAIL = 154,
+    DETECTOR_RAIL = 155,
+    STICKY_PISTON = 156,
+    COBWEB = 157,
+    SHORT_GRASS = 158,
+    FERN = 159,
+    DEAD_BUSH = 160,
+    SEAGRASS = 161,
+    TALL_SEAGRASS = 162,
+    PISTON = 163,
+    PISTON_HEAD = 164,
+    
+    // Wool
+    WHITE_WOOL = 165,
+    ORANGE_WOOL = 166,
+    MAGENTA_WOOL = 167,
+    LIGHT_BLUE_WOOL = 168,
+    YELLOW_WOOL = 169,
+    LIME_WOOL = 170,
+    PINK_WOOL = 171,
+    GRAY_WOOL = 172,
+    LIGHT_GRAY_WOOL = 173,
+    CYAN_WOOL = 174,
+    PURPLE_WOOL = 175,
+    BLUE_WOOL = 176,
+    BROWN_WOOL = 177,
+    GREEN_WOOL = 178,
+    RED_WOOL = 179,
+    BLACK_WOOL = 180,
+    
+    // Flowers
+    DANDELION = 181,
+    POPPY = 182,
+    BLUE_ORCHID = 183,
+    ALLIUM = 184,
+    AZURE_BLUET = 185,
+    RED_TULIP = 186,
+    ORANGE_TULIP = 187,
+    WHITE_TULIP = 188,
+    PINK_TULIP = 189,
+    OXEYE_DAISY = 190,
+    CORNFLOWER = 191,
+    LILY_OF_THE_VALLEY = 192,
+    WITHER_ROSE = 193,
+    TORCHFLOWER = 194,
+    PITCHER_PLANT = 195,
+    
+    // Mushrooms
+    BROWN_MUSHROOM = 196,
+    RED_MUSHROOM = 197,
+    CRIMSON_FUNGUS = 198,
+    WARPED_FUNGUS = 199,
+    CRIMSON_ROOTS = 200,
+    WARPED_ROOTS = 201,
+    NETHER_SPROUTS = 202,
+    WEEPING_VINES = 203,
+    TWISTING_VINES = 204,
+    SUGAR_CANE = 205,
+    KELP = 206,
+    MOSS_CARPET = 207,
+    PINK_PETALS = 208,
+    MOSS_BLOCK = 209,
+    HANGING_ROOTS = 210,
+    BIG_DRIPLEAF = 211,
+    SMALL_DRIPLEAF = 212,
+    BAMBOO = 213,
+    
+    // Gold block
+    GOLD_BLOCK = 214,
+    
+    // Iron block
+    IRON_BLOCK = 215,
+    
+    // Bricks
+    BRICKS = 216,
+    
+    // TNT
+    TNT = 217,
+    
+    // Bookshelf
+    BOOKSHELF = 218,
+    CHISELED_BOOKSHELF = 219,
+    
+    // Mossy cobblestone
+    MOSSY_STONE_BRICKS = 220,
+    
+    // Obsidian
+    OBSIDIAN = 221,
+    CRYING_OBSIDIAN = 222,
+    
+    // Torches
+    TORCH = 223,
+    WALL_TORCH = 224,
+    SOUL_TORCH = 225,
+    SOUL_WALL_TORCH = 226,
+    
+    // Fire
+    FIRE = 227,
+    SOUL_FIRE = 228,
+    
+    // Spawner
+    SPAWNER = 229,
+    
+    // Stairs - Oak
+    OAK_STAIRS = 230,
+    
+    // Chest
+    CHEST = 231,
+    
+    // Redstone wire
+    REDSTONE_WIRE = 232,
+    
+    // Diamond ore was already listed above
+    
+    // Diamond block
+    DIAMOND_BLOCK = 233,
+    
+    // Crafting table
+    CRAFTING_TABLE = 234,
+    
+    // Wheat crops
+    WHEAT = 235,
+    
+    // Farmland
+    FARMLAND = 236,
+    
+    // Furnace
+    FURNACE = 237,
+    
+    // Furnace (lit)
+    // FURNACE_LIT = 238, // This is a blockstate, not separate block
+    
+    // Signs
+    OAK_SIGN = 238,
+    SPRUCE_SIGN = 239,
+    BIRCH_SIGN = 240,
+    JUNGLE_SIGN = 241,
+    ACACIA_SIGN = 242,
+    DARK_OAK_SIGN = 243,
+    MANGROVE_SIGN = 244,
+    CHERRY_SIGN = 245,
+    BAMBOO_SIGN = 246,
+    CRIMSON_SIGN = 247,
+    WARPED_SIGN = 248,
+    
+    // Wall signs
+    OAK_WALL_SIGN = 249,
+    SPRUCE_WALL_SIGN = 250,
+    BIRCH_WALL_SIGN = 251,
+    JUNGLE_WALL_SIGN = 252,
+    ACACIA_WALL_SIGN = 253,
+    DARK_OAK_WALL_SIGN = 254,
+    MANGROVE_WALL_SIGN = 255,
+    CHERRY_WALL_SIGN = 256,
+    BAMBOO_WALL_SIGN = 257,
+    CRIMSON_WALL_SIGN = 258,
+    WARPED_WALL_SIGN = 259,
+    
+    // Hanging signs
+    OAK_HANGING_SIGN = 260,
+    SPRUCE_HANGING_SIGN = 261,
+    BIRCH_HANGING_SIGN = 262,
+    JUNGLE_HANGING_SIGN = 263,
+    ACACIA_HANGING_SIGN = 264,
+    DARK_OAK_HANGING_SIGN = 265,
+    CRIMSON_HANGING_SIGN = 266,
+    WARPED_HANGING_SIGN = 267,
+    MANGROVE_HANGING_SIGN = 268,
+    CHERRY_HANGING_SIGN = 269,
+    BAMBOO_HANGING_SIGN = 270,
+    
+    // Wall hanging signs
+    OAK_WALL_HANGING_SIGN = 271,
+    SPRUCE_WALL_HANGING_SIGN = 272,
+    BIRCH_WALL_HANGING_SIGN = 273,
+    JUNGLE_WALL_HANGING_SIGN = 274,
+    ACACIA_WALL_HANGING_SIGN = 275,
+    DARK_OAK_WALL_HANGING_SIGN = 276,
+    CRIMSON_WALL_HANGING_SIGN = 277,
+    WARPED_WALL_HANGING_SIGN = 278,
+    MANGROVE_WALL_HANGING_SIGN = 279,
+    CHERRY_WALL_HANGING_SIGN = 280,
+    BAMBOO_WALL_HANGING_SIGN = 281,
+    
+    // Doors
+    OAK_DOOR = 282,
+    SPRUCE_DOOR = 283,
+    BIRCH_DOOR = 284,
+    JUNGLE_DOOR = 285,
+    ACACIA_DOOR = 286,
+    DARK_OAK_DOOR = 287,
+    MANGROVE_DOOR = 288,
+    CHERRY_DOOR = 289,
+    BAMBOO_DOOR = 290,
+    CRIMSON_DOOR = 291,
+    WARPED_DOOR = 292,
+    IRON_DOOR = 293,
+    
+    // Ladder
+    LADDER = 294,
+    
+    // Rail
+    RAIL = 295,
+    
+    // Stairs - Stone
+    COBBLESTONE_STAIRS = 296,
+    
+    // Lever
+    LEVER = 297,
+    
+    // Pressure plates
+    STONE_PRESSURE_PLATE = 298,
+    OAK_PRESSURE_PLATE = 299,
+    SPRUCE_PRESSURE_PLATE = 300,
+    BIRCH_PRESSURE_PLATE = 301,
+    JUNGLE_PRESSURE_PLATE = 302,
+    ACACIA_PRESSURE_PLATE = 303,
+    DARK_OAK_PRESSURE_PLATE = 304,
+    MANGROVE_PRESSURE_PLATE = 305,
+    CHERRY_PRESSURE_PLATE = 306,
+    BAMBOO_PRESSURE_PLATE = 307,
+    CRIMSON_PRESSURE_PLATE = 308,
+    WARPED_PRESSURE_PLATE = 309,
+    POLISHED_BLACKSTONE_PRESSURE_PLATE = 310,
+    LIGHT_WEIGHTED_PRESSURE_PLATE = 311,
+    HEAVY_WEIGHTED_PRESSURE_PLATE = 312,
+    
+    // Redstone torch
+    REDSTONE_TORCH = 313,
+    REDSTONE_WALL_TORCH = 314,
+    
+    // Stone button
+    STONE_BUTTON = 315,
+    
+    // Snow
+    SNOW = 316,
+    SNOW_BLOCK = 317,
+    
+    // Ice
+    ICE = 318,
+    PACKED_ICE = 319,
+    BLUE_ICE = 320,
+    
+    // Cactus
+    CACTUS = 321,
+    
+    // Clay
+    CLAY = 322,
+    
+    // Jukebox
+    JUKEBOX = 323,
+    
+    // Fence
+    OAK_FENCE = 324,
+    SPRUCE_FENCE = 325,
+    BIRCH_FENCE = 326,
+    JUNGLE_FENCE = 327,
+    ACACIA_FENCE = 328,
+    DARK_OAK_FENCE = 329,
+    MANGROVE_FENCE = 330,
+    CHERRY_FENCE = 331,
+    BAMBOO_FENCE = 332,
+    CRIMSON_FENCE = 333,
+    WARPED_FENCE = 334,
+    NETHER_BRICK_FENCE = 335,
+    
+    // Pumpkin
+    PUMPKIN = 336,
+    CARVED_PUMPKIN = 337,
+    JACK_O_LANTERN = 338,
+    
+    // Netherrack
+    NETHERRACK = 339,
+    
+    // Soul sand
+    SOUL_SAND = 340,
+    SOUL_SOIL = 341,
+    
+    // Basalt
+    BASALT = 342,
+    POLISHED_BASALT = 343,
+    SMOOTH_BASALT = 344,
+    
+    // Glowstone
+    GLOWSTONE = 345,
+    
+    // Portal
+    NETHER_PORTAL = 346,
+    
+    // Cake
+    CAKE = 347,
+    
+    // Repeater
+    REPEATER = 348,
+    
+    // Stained glass
+    WHITE_STAINED_GLASS = 349,
+    ORANGE_STAINED_GLASS = 350,
+    MAGENTA_STAINED_GLASS = 351,
+    LIGHT_BLUE_STAINED_GLASS = 352,
+    YELLOW_STAINED_GLASS = 353,
+    LIME_STAINED_GLASS = 354,
+    PINK_STAINED_GLASS = 355,
+    GRAY_STAINED_GLASS = 356,
+    LIGHT_GRAY_STAINED_GLASS = 357,
+    CYAN_STAINED_GLASS = 358,
+    PURPLE_STAINED_GLASS = 359,
+    BLUE_STAINED_GLASS = 360,
+    BROWN_STAINED_GLASS = 361,
+    GREEN_STAINED_GLASS = 362,
+    RED_STAINED_GLASS = 363,
+    BLACK_STAINED_GLASS = 364,
+    
+    // Trapdoors
+    OAK_TRAPDOOR = 365,
+    SPRUCE_TRAPDOOR = 366,
+    BIRCH_TRAPDOOR = 367,
+    JUNGLE_TRAPDOOR = 368,
+    ACACIA_TRAPDOOR = 369,
+    DARK_OAK_TRAPDOOR = 370,
+    MANGROVE_TRAPDOOR = 371,
+    CHERRY_TRAPDOOR = 372,
+    BAMBOO_TRAPDOOR = 373,
+    CRIMSON_TRAPDOOR = 374,
+    WARPED_TRAPDOOR = 375,
+    IRON_TRAPDOOR = 376,
+    
+    // Stone bricks
+    STONE_BRICKS = 377,
+    MOSSY_STONE_BRICKS_2 = 378, // Different from earlier one
+    CRACKED_STONE_BRICKS = 379,
+    CHISELED_STONE_BRICKS = 380,
+    PACKED_MUD = 381,
+    MUD_BRICKS = 382,
+    
+    // Brown and red mushroom blocks
+    BROWN_MUSHROOM_BLOCK = 383,
+    RED_MUSHROOM_BLOCK = 384,
+    MUSHROOM_STEM = 385,
+    
+    // Iron bars
+    IRON_BARS = 386,
+    
+    // Chain
+    CHAIN = 387,
+    
+    // Glass pane
+    GLASS_PANE = 388,
+    
+    // Melon
+    MELON = 389,
+    ATTACHED_PUMPKIN_STEM = 390,
+    ATTACHED_MELON_STEM = 391,
+    PUMPKIN_STEM = 392,
+    MELON_STEM = 393,
+    
+    // Vines
+    VINE = 394,
+    GLOW_LICHEN = 395,
+    
+    // Fence gates
+    OAK_FENCE_GATE = 396,
+    SPRUCE_FENCE_GATE = 397,
+    BIRCH_FENCE_GATE = 398,
+    JUNGLE_FENCE_GATE = 399,
+    ACACIA_FENCE_GATE = 400,
+    DARK_OAK_FENCE_GATE = 401,
+    MANGROVE_FENCE_GATE = 402,
+    CHERRY_FENCE_GATE = 403,
+    BAMBOO_FENCE_GATE = 404,
+    CRIMSON_FENCE_GATE = 405,
+    WARPED_FENCE_GATE = 406,
+    
+    // Brick stairs
+    BRICK_STAIRS = 407,
+    STONE_BRICK_STAIRS = 408,
+    MUD_BRICK_STAIRS = 409,
+    
+    // Mycelium
+    MYCELIUM = 410,
+    
+    // Lily pad
+    LILY_PAD = 411,
+    
+    // Nether bricks
+    NETHER_BRICKS = 412,
+    CRACKED_NETHER_BRICKS = 413,
+    CHISELED_NETHER_BRICKS = 414,
+    
+    // Nether brick stairs
+    NETHER_BRICK_STAIRS = 415,
+    
+    // Nether wart
+    NETHER_WART = 416,
+    NETHER_WART_BLOCK = 417,
+    WARPED_WART_BLOCK = 418,
+    
+    // Enchanting table
+    ENCHANTING_TABLE = 419,
+    
+    // Brewing stand
+    BREWING_STAND = 420,
+    
+    // Cauldron
+    CAULDRON = 421,
+    WATER_CAULDRON = 422,
+    LAVA_CAULDRON = 423,
+    POWDER_SNOW_CAULDRON = 424,
+    
+    // End portal
+    END_PORTAL = 425,
+    END_PORTAL_FRAME = 426,
+    
+    // End stone
+    END_STONE = 427,
+    END_STONE_BRICKS = 428,
+    
+    // Dragon egg
+    DRAGON_EGG = 429,
+    
+    // Redstone lamp
+    REDSTONE_LAMP = 430,
+    
+    // Cocoa
+    COCOA = 431,
+    
+    // Stairs continued
+    SANDSTONE_STAIRS = 432,
+    
+    // Ender chest
+    ENDER_CHEST = 433,
+    
+    // Tripwire hook
+    TRIPWIRE_HOOK = 434,
+    TRIPWIRE = 435,
+    
+    // Block of emerald
+    EMERALD_BLOCK = 436,
+    
+    // More stairs
+    SPRUCE_STAIRS = 437,
+    BIRCH_STAIRS = 438,
+    JUNGLE_STAIRS = 439,
+    
+    // Command block
+    COMMAND_BLOCK = 440,
+    
+    // Beacon
+    BEACON = 441,
+    
+    // Walls
+    COBBLESTONE_WALL = 442,
+    MOSSY_COBBLESTONE_WALL = 443,
+    BRICK_WALL = 444,
+    PRISMARINE_WALL = 445,
+    RED_SANDSTONE_WALL = 446,
+    MOSSY_STONE_BRICK_WALL = 447,
+    GRANITE_WALL = 448,
+    STONE_BRICK_WALL = 449,
+    MUD_BRICK_WALL = 450,
+    NETHER_BRICK_WALL = 451,
+    ANDESITE_WALL = 452,
+    RED_NETHER_BRICK_WALL = 453,
+    SANDSTONE_WALL = 454,
+    END_STONE_BRICK_WALL = 455,
+    DIORITE_WALL = 456,
+    BLACKSTONE_WALL = 457,
+    POLISHED_BLACKSTONE_WALL = 458,
+    POLISHED_BLACKSTONE_BRICK_WALL = 459,
+    COBBLED_DEEPSLATE_WALL = 460,
+    POLISHED_DEEPSLATE_WALL = 461,
+    DEEPSLATE_BRICK_WALL = 462,
+    DEEPSLATE_TILE_WALL = 463,
+    
+    // Buttons continued
+    OAK_BUTTON = 464,
+    SPRUCE_BUTTON = 465,
+    BIRCH_BUTTON = 466,
+    JUNGLE_BUTTON = 467,
+    ACACIA_BUTTON = 468,
+    DARK_OAK_BUTTON = 469,
+    MANGROVE_BUTTON = 470,
+    CHERRY_BUTTON = 471,
+    BAMBOO_BUTTON = 472,
+    CRIMSON_BUTTON = 473,
+    WARPED_BUTTON = 474,
+    POLISHED_BLACKSTONE_BUTTON = 475,
+    
+    // Anvil
+    ANVIL = 476,
+    CHIPPED_ANVIL = 477,
+    DAMAGED_ANVIL = 478,
+    
+    // Trapped chest
+    TRAPPED_CHEST = 479,
+    
+    // Comparator
+    COMPARATOR = 480,
+    
+    // Daylight detector
+    DAYLIGHT_DETECTOR = 481,
+    
+    // Block of redstone
+    REDSTONE_BLOCK = 482,
+    
+    // Quartz blocks
+    QUARTZ_BLOCK = 483,
+    CHISELED_QUARTZ_BLOCK = 484,
+    QUARTZ_PILLAR = 485,
+    QUARTZ_STAIRS = 486,
+    SMOOTH_QUARTZ = 487,
+    SMOOTH_QUARTZ_STAIRS = 488,
+    
+    // Activator rail
+    ACTIVATOR_RAIL = 489,
+    
+    // Hopper
+    HOPPER = 490,
+    
+    // Prismarine
+    PRISMARINE = 491,
+    PRISMARINE_BRICKS = 492,
+    DARK_PRISMARINE = 493,
+    PRISMARINE_STAIRS = 494,
+    PRISMARINE_BRICK_STAIRS = 495,
+    DARK_PRISMARINE_STAIRS = 496,
+    
+    // Sea lantern
+    SEA_LANTERN = 497,
+    
+    // Hay bale
+    HAY_BLOCK = 498,
+    
+    // Carpet
+    WHITE_CARPET = 499,
+    ORANGE_CARPET = 500,
+    MAGENTA_CARPET = 501,
+    LIGHT_BLUE_CARPET = 502,
+    YELLOW_CARPET = 503,
+    LIME_CARPET = 504,
+    PINK_CARPET = 505,
+    GRAY_CARPET = 506,
+    LIGHT_GRAY_CARPET = 507,
+    CYAN_CARPET = 508,
+    PURPLE_CARPET = 509,
+    BLUE_CARPET = 510,
+    BROWN_CARPET = 511,
+    GREEN_CARPET = 512,
+    RED_CARPET = 513,
+    BLACK_CARPET = 514,
+    
+    // Terracotta
+    TERRACOTTA = 515,
+    WHITE_TERRACOTTA = 516,
+    ORANGE_TERRACOTTA = 517,
+    MAGENTA_TERRACOTTA = 518,
+    LIGHT_BLUE_TERRACOTTA = 519,
+    YELLOW_TERRACOTTA = 520,
+    LIME_TERRACOTTA = 521,
+    PINK_TERRACOTTA = 522,
+    GRAY_TERRACOTTA = 523,
+    LIGHT_GRAY_TERRACOTTA = 524,
+    CYAN_TERRACOTTA = 525,
+    PURPLE_TERRACOTTA = 526,
+    BLUE_TERRACOTTA = 527,
+    BROWN_TERRACOTTA = 528,
+    GREEN_TERRACOTTA = 529,
+    RED_TERRACOTTA = 530,
+    BLACK_TERRACOTTA = 531,
+    
+    // Slabs - Stone
+    STONE_SLAB = 532,
+    SMOOTH_STONE_SLAB = 533,
+    SANDSTONE_SLAB = 534,
+    CUT_SANDSTONE_SLAB = 535,
+    PETRIFIED_OAK_SLAB = 536,
+    COBBLESTONE_SLAB = 537,
+    BRICK_SLAB = 538,
+    STONE_BRICK_SLAB = 539,
+    MUD_BRICK_SLAB = 540,
+    NETHER_BRICK_SLAB = 541,
+    QUARTZ_SLAB = 542,
+    RED_SANDSTONE_SLAB = 543,
+    CUT_RED_SANDSTONE_SLAB = 544,
+    PURPUR_SLAB = 545,
+    PRISMARINE_SLAB = 546,
+    PRISMARINE_BRICK_SLAB = 547,
+    DARK_PRISMARINE_SLAB = 548,
+    
+    // Slabs - Wood
+    OAK_SLAB = 549,
+    SPRUCE_SLAB = 550,
+    BIRCH_SLAB = 551,
+    JUNGLE_SLAB = 552,
+    ACACIA_SLAB = 553,
+    DARK_OAK_SLAB = 554,
+    MANGROVE_SLAB = 555,
+    CHERRY_SLAB = 556,
+    BAMBOO_SLAB = 557,
+    CRIMSON_SLAB = 558,
+    WARPED_SLAB = 559,
+    
+    // More slabs
+    SMOOTH_QUARTZ_SLAB = 560,
+    GRANITE_SLAB = 561,
+    ANDESITE_SLAB = 562,
+    RED_NETHER_BRICK_SLAB = 563,
+    POLISHED_ANDESITE_SLAB = 564,
+    DIORITE_SLAB = 565,
+    POLISHED_DIORITE_SLAB = 566,
+    POLISHED_GRANITE_SLAB = 567,
+    END_STONE_BRICK_SLAB = 568,
+    BLACKSTONE_SLAB = 569,
+    POLISHED_BLACKSTONE_BRICK_SLAB = 570,
+    POLISHED_BLACKSTONE_SLAB = 571,
+    OXIDIZED_CUT_COPPER_SLAB = 572,
+    WEATHERED_CUT_COPPER_SLAB = 573,
+    EXPOSED_CUT_COPPER_SLAB = 574,
+    CUT_COPPER_SLAB = 575,
+    WAXED_OXIDIZED_CUT_COPPER_SLAB = 576,
+    WAXED_WEATHERED_CUT_COPPER_SLAB = 577,
+    WAXED_EXPOSED_CUT_COPPER_SLAB = 578,
+    WAXED_CUT_COPPER_SLAB = 579,
+    COBBLED_DEEPSLATE_SLAB = 580,
+    POLISHED_DEEPSLATE_SLAB = 581,
+    DEEPSLATE_BRICK_SLAB = 582,
+    DEEPSLATE_TILE_SLAB = 583,
+    
+    // Barrier
+    BARRIER = 584,
+    
+    // Light
+    LIGHT = 585,
+    
+    // Banners
+    WHITE_BANNER = 586,
+    ORANGE_BANNER = 587,
+    MAGENTA_BANNER = 588,
+    LIGHT_BLUE_BANNER = 589,
+    YELLOW_BANNER = 590,
+    LIME_BANNER = 591,
+    PINK_BANNER = 592,
+    GRAY_BANNER = 593,
+    LIGHT_GRAY_BANNER = 594,
+    CYAN_BANNER = 595,
+    PURPLE_BANNER = 596,
+    BLUE_BANNER = 597,
+    BROWN_BANNER = 598,
+    GREEN_BANNER = 599,
+    RED_BANNER = 600,
+    BLACK_BANNER = 601,
+    
+    // Wall banners
+    WHITE_WALL_BANNER = 602,
+    ORANGE_WALL_BANNER = 603,
+    MAGENTA_WALL_BANNER = 604,
+    LIGHT_BLUE_WALL_BANNER = 605,
+    YELLOW_WALL_BANNER = 606,
+    LIME_WALL_BANNER = 607,
+    PINK_WALL_BANNER = 608,
+    GRAY_WALL_BANNER = 609,
+    LIGHT_GRAY_WALL_BANNER = 610,
+    CYAN_WALL_BANNER = 611,
+    PURPLE_WALL_BANNER = 612,
+    BLUE_WALL_BANNER = 613,
+    BROWN_WALL_BANNER = 614,
+    GREEN_WALL_BANNER = 615,
+    RED_WALL_BANNER = 616,
+    BLACK_WALL_BANNER = 617,
+    
+    // Red nether bricks
+    RED_NETHER_BRICKS = 618,
+    
+    // Bone block
+    BONE_BLOCK = 619,
+    
+    // Structure void
+    STRUCTURE_VOID = 620,
+    
+    // Observer
+    OBSERVER = 621,
+    
+    // Shulker boxes
+    SHULKER_BOX = 622,
+    WHITE_SHULKER_BOX = 623,
+    ORANGE_SHULKER_BOX = 624,
+    MAGENTA_SHULKER_BOX = 625,
+    LIGHT_BLUE_SHULKER_BOX = 626,
+    YELLOW_SHULKER_BOX = 627,
+    LIME_SHULKER_BOX = 628,
+    PINK_SHULKER_BOX = 629,
+    GRAY_SHULKER_BOX = 630,
+    LIGHT_GRAY_SHULKER_BOX = 631,
+    CYAN_SHULKER_BOX = 632,
+    PURPLE_SHULKER_BOX = 633,
+    BLUE_SHULKER_BOX = 634,
+    BROWN_SHULKER_BOX = 635,
+    GREEN_SHULKER_BOX = 636,
+    RED_SHULKER_BOX = 637,
+    BLACK_SHULKER_BOX = 638,
+    
+    // Glazed terracotta
+    WHITE_GLAZED_TERRACOTTA = 639,
+    ORANGE_GLAZED_TERRACOTTA = 640,
+    MAGENTA_GLAZED_TERRACOTTA = 641,
+    LIGHT_BLUE_GLAZED_TERRACOTTA = 642,
+    YELLOW_GLAZED_TERRACOTTA = 643,
+    LIME_GLAZED_TERRACOTTA = 644,
+    PINK_GLAZED_TERRACOTTA = 645,
+    GRAY_GLAZED_TERRACOTTA = 646,
+    LIGHT_GRAY_GLAZED_TERRACOTTA = 647,
+    CYAN_GLAZED_TERRACOTTA = 648,
+    PURPLE_GLAZED_TERRACOTTA = 649,
+    BLUE_GLAZED_TERRACOTTA = 650,
+    BROWN_GLAZED_TERRACOTTA = 651,
+    GREEN_GLAZED_TERRACOTTA = 652,
+    RED_GLAZED_TERRACOTTA = 653,
+    BLACK_GLAZED_TERRACOTTA = 654,
+    
+    // Concrete
+    WHITE_CONCRETE = 655,
+    ORANGE_CONCRETE = 656,
+    MAGENTA_CONCRETE = 657,
+    LIGHT_BLUE_CONCRETE = 658,
+    YELLOW_CONCRETE = 659,
+    LIME_CONCRETE = 660,
+    PINK_CONCRETE = 661,
+    GRAY_CONCRETE = 662,
+    LIGHT_GRAY_CONCRETE = 663,
+    CYAN_CONCRETE = 664,
+    PURPLE_CONCRETE = 665,
+    BLUE_CONCRETE = 666,
+    BROWN_CONCRETE = 667,
+    GREEN_CONCRETE = 668,
+    RED_CONCRETE = 669,
+    BLACK_CONCRETE = 670,
+    
+    // Concrete powder
+    WHITE_CONCRETE_POWDER = 671,
+    ORANGE_CONCRETE_POWDER = 672,
+    MAGENTA_CONCRETE_POWDER = 673,
+    LIGHT_BLUE_CONCRETE_POWDER = 674,
+    YELLOW_CONCRETE_POWDER = 675,
+    LIME_CONCRETE_POWDER = 676,
+    PINK_CONCRETE_POWDER = 677,
+    GRAY_CONCRETE_POWDER = 678,
+    LIGHT_GRAY_CONCRETE_POWDER = 679,
+    CYAN_CONCRETE_POWDER = 680,
+    PURPLE_CONCRETE_POWDER = 681,
+    BLUE_CONCRETE_POWDER = 682,
+    BROWN_CONCRETE_POWDER = 683,
+    GREEN_CONCRETE_POWDER = 684,
+    RED_CONCRETE_POWDER = 685,
+    BLACK_CONCRETE_POWDER = 686,
+    
+    // Kelp plant
+    KELP_PLANT = 687,
+    
+    // Dried kelp block
+    DRIED_KELP_BLOCK = 688,
+    
+    // Turtle egg
+    TURTLE_EGG = 689,
+    
+    // Dead tube coral
+    DEAD_TUBE_CORAL_BLOCK = 690,
+    DEAD_BRAIN_CORAL_BLOCK = 691,
+    DEAD_BUBBLE_CORAL_BLOCK = 692,
+    DEAD_FIRE_CORAL_BLOCK = 693,
+    DEAD_HORN_CORAL_BLOCK = 694,
+    
+    // Tube coral
+    TUBE_CORAL_BLOCK = 695,
+    BRAIN_CORAL_BLOCK = 696,
+    BUBBLE_CORAL_BLOCK = 697,
+    FIRE_CORAL_BLOCK = 698,
+    HORN_CORAL_BLOCK = 699,
+    
+    // Dead tube coral
+    DEAD_TUBE_CORAL = 700,
+    DEAD_BRAIN_CORAL = 701,
+    DEAD_BUBBLE_CORAL = 702,
+    DEAD_FIRE_CORAL = 703,
+    DEAD_HORN_CORAL = 704,
+    DEAD_TUBE_CORAL_FAN = 705,
+    DEAD_BRAIN_CORAL_FAN = 706,
+    DEAD_BUBBLE_CORAL_FAN = 707,
+    DEAD_FIRE_CORAL_FAN = 708,
+    DEAD_HORN_CORAL_FAN = 709,
+    
+    // Tube coral
+    TUBE_CORAL = 710,
+    BRAIN_CORAL = 711,
+    BUBBLE_CORAL = 712,
+    FIRE_CORAL = 713,
+    HORN_CORAL = 714,
+    TUBE_CORAL_FAN = 715,
+    BRAIN_CORAL_FAN = 716,
+    BUBBLE_CORAL_FAN = 717,
+    FIRE_CORAL_FAN = 718,
+    HORN_CORAL_FAN = 719,
+    
+    // Dead wall coral fans
+    DEAD_TUBE_CORAL_WALL_FAN = 720,
+    DEAD_BRAIN_CORAL_WALL_FAN = 721,
+    DEAD_BUBBLE_CORAL_WALL_FAN = 722,
+    DEAD_FIRE_CORAL_WALL_FAN = 723,
+    DEAD_HORN_CORAL_WALL_FAN = 724,
+    
+    // Wall coral fans
+    TUBE_CORAL_WALL_FAN = 725,
+    BRAIN_CORAL_WALL_FAN = 726,
+    BUBBLE_CORAL_WALL_FAN = 727,
+    FIRE_CORAL_WALL_FAN = 728,
+    HORN_CORAL_WALL_FAN = 729,
+    
+    // Sea pickle
+    SEA_PICKLE = 730,
+    
+    // Conduit
+    CONDUIT = 731,
+    
+    // Bamboo sapling
+    BAMBOO_SAPLING = 732,
+    
+    // Potted plants - these are technical blocks
+    POTTED_OAK_SAPLING = 733,
+    POTTED_SPRUCE_SAPLING = 734,
+    POTTED_BIRCH_SAPLING = 735,
+    POTTED_JUNGLE_SAPLING = 736,
+    POTTED_ACACIA_SAPLING = 737,
+    POTTED_DARK_OAK_SAPLING = 738,
+    POTTED_FERN = 739,
+    POTTED_DANDELION = 740,
+    POTTED_POPPY = 741,
+    POTTED_BLUE_ORCHID = 742,
+    POTTED_ALLIUM = 743,
+    POTTED_AZURE_BLUET = 744,
+    POTTED_RED_TULIP = 745,
+    POTTED_ORANGE_TULIP = 746,
+    POTTED_WHITE_TULIP = 747,
+    POTTED_PINK_TULIP = 748,
+    POTTED_OXEYE_DAISY = 749,
+    POTTED_CORNFLOWER = 750,
+    POTTED_LILY_OF_THE_VALLEY = 751,
+    POTTED_WITHER_ROSE = 752,
+    POTTED_RED_MUSHROOM = 753,
+    POTTED_BROWN_MUSHROOM = 754,
+    POTTED_DEAD_BUSH = 755,
+    POTTED_CACTUS = 756,
+    POTTED_BAMBOO = 757,
+    POTTED_CRIMSON_FUNGUS = 758,
+    POTTED_WARPED_FUNGUS = 759,
+    POTTED_CRIMSON_ROOTS = 760,
+    POTTED_WARPED_ROOTS = 761,
+    POTTED_AZALEA_BUSH = 762,
+    POTTED_FLOWERING_AZALEA_BUSH = 763,
+    POTTED_MANGROVE_PROPAGULE = 764,
+    POTTED_CHERRY_SAPLING = 765,
+    POTTED_TORCHFLOWER = 766,
+    
+    // More blocks
+    CARROTS = 767,
+    POTATOES = 768,
+    OAK_BUTTON_2 = 769, // Duplicate, need to resolve
+    SKELETON_SKULL = 770,
+    SKELETON_WALL_SKULL = 771,
+    WITHER_SKELETON_SKULL = 772,
+    WITHER_SKELETON_WALL_SKULL = 773,
+    ZOMBIE_HEAD = 774,
+    ZOMBIE_WALL_HEAD = 775,
+    PLAYER_HEAD = 776,
+    PLAYER_WALL_HEAD = 777,
+    CREEPER_HEAD = 778,
+    CREEPER_WALL_HEAD = 779,
+    DRAGON_HEAD = 780,
+    DRAGON_WALL_HEAD = 781,
+    PIGLIN_HEAD = 782,
+    PIGLIN_WALL_HEAD = 783,
+    
+    // End rods
+    END_ROD = 784,
+    
+    // Chorus plants
+    CHORUS_PLANT = 785,
+    CHORUS_FLOWER = 786,
+    
+    // Purpur
+    PURPUR_BLOCK = 787,
+    PURPUR_PILLAR = 788,
+    PURPUR_STAIRS = 789,
+    
+    // Beetroots
+    BEETROOTS = 790,
+    
+    // Dirt path
+    DIRT_PATH = 791,
+    
+    // End gateway
+    END_GATEWAY = 792,
+    
+    // Repeating command block
+    REPEATING_COMMAND_BLOCK = 793,
+    CHAIN_COMMAND_BLOCK = 794,
+    
+    // Frosted ice
+    FROSTED_ICE = 795,
+    
+    // Magma block
+    MAGMA_BLOCK = 796,
+    
+    // Nether wart block
+    // NETHER_WART_BLOCK = 797, // Already defined
+    
+    // Red nether bricks
+    // RED_NETHER_BRICKS = 798, // Already defined
+    
+    // Structure block
+    STRUCTURE_BLOCK = 797,
+    
+    // 1.17+ blocks (Caves & Cliffs)
+    POWDER_SNOW = 798,
+    SCULK = 799,
+    SCULK_VEIN = 800,
+    SCULK_CATALYST = 801,
+    SCULK_SHRIEKER = 802,
+    SCULK_SENSOR = 803,
+    CALIBRATED_SCULK_SENSOR = 804,
+    
+    // Copper blocks
+    COPPER_BLOCK = 805,
+    EXPOSED_COPPER = 806,
+    WEATHERED_COPPER = 807,
+    OXIDIZED_COPPER = 808,
+    WAXED_COPPER_BLOCK = 809,
+    WAXED_EXPOSED_COPPER = 810,
+    WAXED_WEATHERED_COPPER = 811,
+    WAXED_OXIDIZED_COPPER = 812,
+    
+    // Cut copper
+    CUT_COPPER = 813,
+    EXPOSED_CUT_COPPER = 814,
+    WEATHERED_CUT_COPPER = 815,
+    OXIDIZED_CUT_COPPER = 816,
+    WAXED_CUT_COPPER = 817,
+    WAXED_EXPOSED_CUT_COPPER = 818,
+    WAXED_WEATHERED_CUT_COPPER = 819,
+    WAXED_OXIDIZED_CUT_COPPER = 820,
+    
+    // Cut copper stairs
+    CUT_COPPER_STAIRS = 821,
+    EXPOSED_CUT_COPPER_STAIRS = 822,
+    WEATHERED_CUT_COPPER_STAIRS = 823,
+    OXIDIZED_CUT_COPPER_STAIRS = 824,
+    WAXED_CUT_COPPER_STAIRS = 825,
+    WAXED_EXPOSED_CUT_COPPER_STAIRS = 826,
+    WAXED_WEATHERED_CUT_COPPER_STAIRS = 827,
+    WAXED_OXIDIZED_CUT_COPPER_STAIRS = 828,
+    
+    // Lightning rod
+    LIGHTNING_ROD = 829,
+    
+    // Pointed dripstone
+    POINTED_DRIPSTONE = 830,
+    DRIPSTONE_BLOCK = 831,
+    
+    // Cave vines
+    CAVE_VINES = 832,
+    CAVE_VINES_PLANT = 833,
+    
+    // Spore blossom
+    SPORE_BLOSSOM = 834,
+    
+    // Azalea
+    AZALEA = 835,
+    FLOWERING_AZALEA = 836,
+    
+    // Moss
+    // MOSS_CARPET = 837, // Already defined
+    // MOSS_BLOCK = 838, // Already defined
+    
+    // Rooted dirt
+    // ROOTED_DIRT = 839, // Already defined
+    
+    // Hanging roots
+    // HANGING_ROOTS = 840, // Already defined
+    
+    // Big dripleaf
+    // BIG_DRIPLEAF = 841, // Already defined
+    // SMALL_DRIPLEAF = 842, // Already defined
+    
+    // Tuff
+    TUFF = 837,
+    POLISHED_TUFF = 838,
+    POLISHED_TUFF_SLAB = 839,
+    POLISHED_TUFF_STAIRS = 840,
+    POLISHED_TUFF_WALL = 841,
+    CHISELED_TUFF = 842,
+    TUFF_SLAB = 843,
+    TUFF_STAIRS = 844,
+    TUFF_WALL = 845,
+    CHISELED_TUFF_BRICKS = 846,
+    TUFF_BRICKS = 847,
+    TUFF_BRICK_SLAB = 848,
+    TUFF_BRICK_STAIRS = 849,
+    TUFF_BRICK_WALL = 850,
+    
+    // Calcite
+    CALCITE = 851,
+    
+    // Amethyst
+    AMETHYST_BLOCK = 852,
+    BUDDING_AMETHYST = 853,
+    AMETHYST_CLUSTER = 854,
+    LARGE_AMETHYST_BUD = 855,
+    MEDIUM_AMETHYST_BUD = 856,
+    SMALL_AMETHYST_BUD = 857,
+    
+    // Candles
+    CANDLE = 858,
+    WHITE_CANDLE = 859,
+    ORANGE_CANDLE = 860,
+    MAGENTA_CANDLE = 861,
+    LIGHT_BLUE_CANDLE = 862,
+    YELLOW_CANDLE = 863,
+    LIME_CANDLE = 864,
+    PINK_CANDLE = 865,
+    GRAY_CANDLE = 866,
+    LIGHT_GRAY_CANDLE = 867,
+    CYAN_CANDLE = 868,
+    PURPLE_CANDLE = 869,
+    BLUE_CANDLE = 870,
+    BROWN_CANDLE = 871,
+    GREEN_CANDLE = 872,
+    RED_CANDLE = 873,
+    BLACK_CANDLE = 874,
+    
+    // Candle cakes
+    CANDLE_CAKE = 875,
+    WHITE_CANDLE_CAKE = 876,
+    ORANGE_CANDLE_CAKE = 877,
+    MAGENTA_CANDLE_CAKE = 878,
+    LIGHT_BLUE_CANDLE_CAKE = 879,
+    YELLOW_CANDLE_CAKE = 880,
+    LIME_CANDLE_CAKE = 881,
+    PINK_CANDLE_CAKE = 882,
+    GRAY_CANDLE_CAKE = 883,
+    LIGHT_GRAY_CANDLE_CAKE = 884,
+    CYAN_CANDLE_CAKE = 885,
+    PURPLE_CANDLE_CAKE = 886,
+    BLUE_CANDLE_CAKE = 887,
+    BROWN_CANDLE_CAKE = 888,
+    GREEN_CANDLE_CAKE = 889,
+    RED_CANDLE_CAKE = 890,
+    BLACK_CANDLE_CAKE = 891,
+    
+    // Raw ore blocks
+    RAW_IRON_BLOCK = 892,
+    RAW_COPPER_BLOCK = 893,
+    RAW_GOLD_BLOCK = 894,
+    
+    // More stained glass panes
+    WHITE_STAINED_GLASS_PANE = 895,
+    ORANGE_STAINED_GLASS_PANE = 896,
+    MAGENTA_STAINED_GLASS_PANE = 897,
+    LIGHT_BLUE_STAINED_GLASS_PANE = 898,
+    YELLOW_STAINED_GLASS_PANE = 899,
+    LIME_STAINED_GLASS_PANE = 900,
+    PINK_STAINED_GLASS_PANE = 901,
+    GRAY_STAINED_GLASS_PANE = 902,
+    LIGHT_GRAY_STAINED_GLASS_PANE = 903,
+    CYAN_STAINED_GLASS_PANE = 904,
+    PURPLE_STAINED_GLASS_PANE = 905,
+    BLUE_STAINED_GLASS_PANE = 906,
+    BROWN_STAINED_GLASS_PANE = 907,
+    GREEN_STAINED_GLASS_PANE = 908,
+    RED_STAINED_GLASS_PANE = 909,
+    BLACK_STAINED_GLASS_PANE = 910,
+    
+    // Blackstone family
+    BLACKSTONE = 911,
+    BLACKSTONE_STAIRS = 912,
+    // BLACKSTONE_WALL = 913, // Already defined
+    // BLACKSTONE_SLAB = 914, // Already defined
+    POLISHED_BLACKSTONE = 915,
+    // POLISHED_BLACKSTONE_PRESSURE_PLATE = 916, // Already defined
+    // POLISHED_BLACKSTONE_BUTTON = 917, // Already defined
+    // POLISHED_BLACKSTONE_STAIRS = 918, // Already defined
+    // POLISHED_BLACKSTONE_SLAB = 919, // Already defined
+    // POLISHED_BLACKSTONE_WALL = 920, // Already defined
+    CHISELED_POLISHED_BLACKSTONE = 913,
+    POLISHED_BLACKSTONE_BRICKS = 914,
+    POLISHED_BLACKSTONE_BRICK_STAIRS = 915,
+    // POLISHED_BLACKSTONE_BRICK_SLAB = 923, // Already defined
+    // POLISHED_BLACKSTONE_BRICK_WALL = 924, // Already defined
+    CRACKED_POLISHED_BLACKSTONE_BRICKS = 916,
+    
+    // Gilded blackstone
+    GILDED_BLACKSTONE = 917,
+    
+    // Targets
+    TARGET = 918,
+    
+    // Lodestone
+    LODESTONE = 919,
+    
+    // Crying obsidian
+    // CRYING_OBSIDIAN = 928, // Already partially defined
+    
+    // Respawn anchor
+    RESPAWN_ANCHOR = 920,
+    
+    // Netherite block
+    NETHERITE_BLOCK = 921,
+    
+    // 1.21 blocks (Trial Update)
+    CRAFTER = 922,
+    TRIAL_SPAWNER = 923,
+    VAULT = 924,
+    HEAVY_CORE = 925,
+    
+    // Heavy weighted pressure plate
+    // HEAVY_WEIGHTED_PRESSURE_PLATE = 934, // Already defined
+    
+    // 1.21+ Copper variants
+    COPPER_DOOR = 926,
+    EXPOSED_COPPER_DOOR = 927,
+    OXIDIZED_COPPER_DOOR = 928,
+    WEATHERED_COPPER_DOOR = 929,
+    WAXED_COPPER_DOOR = 930,
+    WAXED_EXPOSED_COPPER_DOOR = 931,
+    WAXED_OXIDIZED_COPPER_DOOR = 932,
+    WAXED_WEATHERED_COPPER_DOOR = 933,
+    
+    COPPER_TRAPDOOR = 934,
+    EXPOSED_COPPER_TRAPDOOR = 935,
+    OXIDIZED_COPPER_TRAPDOOR = 936,
+    WEATHERED_COPPER_TRAPDOOR = 937,
+    WAXED_COPPER_TRAPDOOR = 938,
+    WAXED_EXPOSED_COPPER_TRAPDOOR = 939,
+    WAXED_OXIDIZED_COPPER_TRAPDOOR = 940,
+    WAXED_WEATHERED_COPPER_TRAPDOOR = 941,
+    
+    COPPER_GRATE = 942,
+    EXPOSED_COPPER_GRATE = 943,
+    WEATHERED_COPPER_GRATE = 944,
+    OXIDIZED_COPPER_GRATE = 945,
+    WAXED_COPPER_GRATE = 946,
+    WAXED_EXPOSED_COPPER_GRATE = 947,
+    WAXED_WEATHERED_COPPER_GRATE = 948,
+    WAXED_OXIDIZED_COPPER_GRATE = 949,
+    
+    COPPER_BULB = 950,
+    EXPOSED_COPPER_BULB = 951,
+    WEATHERED_COPPER_BULB = 952,
+    OXIDIZED_COPPER_BULB = 953,
+    WAXED_COPPER_BULB = 954,
+    WAXED_EXPOSED_COPPER_BULB = 955,
+    WAXED_WEATHERED_COPPER_BULB = 956,
+    WAXED_OXIDIZED_COPPER_BULB = 957,
+    
+    CHISELED_COPPER = 958,
+    EXPOSED_CHISELED_COPPER = 959,
+    WEATHERED_CHISELED_COPPER = 960,
+    OXIDIZED_CHISELED_COPPER = 961,
+    WAXED_CHISELED_COPPER = 962,
+    WAXED_EXPOSED_CHISELED_COPPER = 963,
+    WAXED_WEATHERED_CHISELED_COPPER = 964,
+    WAXED_OXIDIZED_CHISELED_COPPER = 965,
+    
+    // Special value for invalid/unknown blocks
+    UNKNOWN = 65535
+};
+
+/**
+ * @brief Block properties for gameplay mechanics
+ */
+struct BlockProperties {
+    float hardness = 1.0f;                    // Mining time multiplier
+    float blast_resistance = 1.0f;            // Explosion resistance
+    std::uint8_t light_emission = 0;          // Light level emitted (0-15)
+    std::uint8_t light_filter = 0;            // Light level reduced when passing through
+    bool is_solid = true;                     // Can entities collide with it
+    bool is_transparent = false;              // Does light pass through
+    bool requires_tool = false;               // Needs correct tool to harvest
+    bool is_flammable = false;               // Can catch fire
+    bool waterloggable = false;              // Can contain water
+    bool randomtick = false;                 // Receives random updates
+    bool affected_by_gravity = false;        // Falls when unsupported
+};
+
+} // namespace world
+} // namespace parallelstone
